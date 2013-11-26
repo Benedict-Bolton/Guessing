@@ -17,6 +17,11 @@
 
 /*==================================================
   the Breakdown:
+  What is the max # of guesses if num is b/t 1&100?  ==> can be guessed in at max 7 guesses
+  What is the max # go guesses if num is b/t 1&200? ==> can be guessed in at max 8 guesses
+  What is the max # of guesses if num is b/t 1&400? ==> can be guessed in at max 9 guesses
+  What is the max # of guesses if num is b/t 1&1000? ==> can be guessed in at max 10 guesses
+  What is the max # of guesses if num is b/t 1&n? ==> can be guessed in at max log[base 2](n), rounded up to the nearest integer, guesses
   Blah blah blah, yakkity smakkity, and a nice tall glass of OJ...
   ==================================================*/
 
@@ -35,12 +40,12 @@ public class GuessNumber {
       constructor -- initializes a guess-a-number game
       pre:  
       post: _lo is lower bound, _hi is upper bound,
-            _guessCtr is 1, _target is random int on range [_lo,_hi]
+            _guessCtr is 0, _target is random int on range [_lo,_hi]
       ==================================================*/
     public GuessNumber( int low, int high ) { // a and b?!?!, ain't nobody got time for non descriptive varaible names
 	_lo = low;
 	_hi = high;
-	_guessCtr = 1;
+	_guessCtr = 0; // I altered what _guessCtr Began on as it didnt seem right considering at the start of the game the count of guesses is zero not one, hence it does not represent the "expected" state of the object at initialization
 	_target = (int) ( (Math.random() * _hi) + _lo );
     }
 
@@ -54,7 +59,7 @@ public class GuessNumber {
     public void playIter() {
 	int guess = (_lo - 1); // guess will always be out of range at initialization
 	while (guess != _target) {
-	    System.out.print("Guess an Interger from 0-100: ");
+	    System.out.print("Guess an Interger from 1-100: ");
 	    guess = Keyboard.readInt();
 	    _guessCtr++;
 	    if (guess == _target) {
@@ -84,8 +89,8 @@ public class GuessNumber {
       ==================================================*/
     public void playRec() {
 	int guess = _lo - 1;
-	if (guess != _target) {
-	    System.out.print("Guess an Interger from 0-100: ");
+	if (guess != _target) { //due to guess initialization this should always hold true until the final else within the if is is going called by code within this if statement (that would have already been entered)
+	    System.out.print("Guess an Interger from 1-100: ");
 	    guess = Keyboard.readInt();
 	    _guessCtr++;
 
@@ -100,9 +105,9 @@ public class GuessNumber {
 		System.out.println("It Seems Guess Again");
 		playRec();
 	    }
-	}
-	else {
-	    System.out.println("DING DING DING! We have a winner! You guessed the elusive mystery number, " + _target+ ", in a mere " + _guessCtr + " tries.");
+	    else { //the guess==_target case
+		System.out.println("DING DING DING! We have a winner! You guessed the elusive mystery number, " + _target+ ", in a mere " + _guessCtr + " tries.");
+	    }
 	}
     }
 
@@ -110,8 +115,8 @@ public class GuessNumber {
     //wrapper for playRec/playIter to simplify calling
     public void play() { 
 	//use one or the other below:
-	//playRec();
-	playIter();
+	playRec();
+	//playIter();
     }
 
 
@@ -119,7 +124,7 @@ public class GuessNumber {
     public static void main( String[] args ) {
 
 	//instantiate a new game
-	GuessNumber g = new GuessNumber(0,100);
+	GuessNumber g = new GuessNumber(1,100);
 
 	//start the game
 	g.play();
